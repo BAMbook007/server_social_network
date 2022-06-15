@@ -7,12 +7,6 @@ jobs:
       matrix:
         node-varsion: [ 17.x ]
   steps:
-    - name: checout
-    uses: actions/checkout@v3
-    - name: Starting Node.js ${{ matrix.node-version }}
-    uses: actions/setup-node@v3
-    with:
-      node-version: ${{ matrix.node-version }}
     - name: rimraf dist
       run: npm run prebuild
     - name: nest build
