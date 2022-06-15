@@ -7,8 +7,6 @@ jobs:
       matrix:
         node-varsion: [ 17.x ]
   steps:
-    - name: rimraf dist
-      run: npm run prebuild
     - name: nest build
       run: npm run build
     - name: prettier --write
