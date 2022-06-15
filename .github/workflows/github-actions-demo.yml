@@ -1,17 +1,36 @@
 name: GitHub Actions Demo
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
+  init:
     runs-on: ubuntu-latest
-    steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+    strategy:
+      matrix:
+        node-varsion: [ 17.x ]
+  steps:
+    - uses: actions/checkout@v3
+    - name: Starting Node.js ${{ matrix.node-version }}
+    uses: actions/setup-node@v3
+    with:
+      node-version: ${{ matrix.node-version }}
+    - name: rimraf dist
+      run: npm run prebuild
+    - name: nest build
+      run: npm run build
+    - name: prettier --write
+      run: npm run format
+    - name: nest start
+      run: npm run start
+    - name: node dist/main
+      run: npm run start:prod
+    - name: eslint
+      run: npm run lint
+    - name: jest
+      run: npm run test
+    - name: jest --watch
+      run: npm run test:watch
+    - name: jest --coverage
+      run: npm run test:cov
+    - name: node
+      run: npm run test:debug
+    - name: jest
+      run: npm run test:e2e
